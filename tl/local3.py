@@ -54,7 +54,7 @@ closed_tabs_count = 0
 # ----------------------------
 # Limit jumlah window (maksimal 4 sekaligus)
 # ----------------------------
-window_limit = asyncio.Semaphore(4)
+window_limit = asyncio.Semaphore(2)
 
 async def get_browser():
     global browser
@@ -558,7 +558,25 @@ async def solve():
         # pastikan progress task dihapus
         try:
             turnstile.stop_progress()
+
+            global opened_tabs_count
+            global closed_tabs_count
+            if opened_tabs_count >= 50 and closed_tabs_count >= 50:
+                print("[INFO] Restarting browser after 50 opened/closed tabs...")
+                try:
+                    await shutdown()
+                    global browser
+                    browser = None
+                    opened_tabs_count = 0
+                    closed_tabs_count = 0
+                    await startup()
+                except Exception as e:
+                    print(f"[WARN] Error stopping browser: {e}")
+                
+                
+
         except Exception:
+            print("fksdfkshdfjkshdfjshdfjshdfjshjdfhsjkfhsjkfhs")
             pass
 
 # ----------------------------
@@ -596,4 +614,3 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
-
