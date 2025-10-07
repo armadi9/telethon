@@ -517,6 +517,7 @@ async def cleanup_tabs():
 # ----------------------------
 @app.route("/solve")
 async def solve():
+    
     url = request.args.get("url")
     proxy = request.args.get("proxy")
     if not url:
@@ -561,7 +562,13 @@ async def solve():
 
             global opened_tabs_count
             global closed_tabs_count
-            if opened_tabs_count >= 100 and closed_tabs_count >= 100:
+            
+            get_semaphore = get_semaphore_status()
+            waiting = get_semaphore.get("waiting")
+            in_use = get_semaphore.get("in_use")
+            
+
+            if opened_tabs_count >= 100 and closed_tabs_count >= 100 and waiting is None and in_use is None:
                 print("[INFO] Restarting browser after 100 opened/closed tabs...")
                 try:
                     await shutdown()
@@ -614,4 +621,3 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
-
