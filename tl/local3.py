@@ -561,8 +561,8 @@ async def solve():
 
             global opened_tabs_count
             global closed_tabs_count
-            if opened_tabs_count >= 50 and closed_tabs_count >= 50:
-                print("[INFO] Restarting browser after 50 opened/closed tabs...")
+            if opened_tabs_count >= 100 and closed_tabs_count >= 100:
+                print("[INFO] Restarting browser after 100 opened/closed tabs...")
                 try:
                     await shutdown()
                     global browser
@@ -614,3 +614,4 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
+
