@@ -575,7 +575,7 @@ async def solve():
             open_tabs = get_semaphore.get("open_tabs")
             
 
-            if opened_tabs_count >= 100 and closed_tabs_count >= 100 and waiting == 0 and open_tabs == 1:
+            if opened_tabs_count >= 100 and closed_tabs_count >= 100 and (waiting == 0 or waiting is None) and open_tabs == 1:
                 print("[INFO] Restarting browser after 100 opened/closed tabs...")
                 try:
                     await shutdown()
@@ -624,6 +624,7 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
