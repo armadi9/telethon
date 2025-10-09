@@ -76,7 +76,7 @@ async def get_browser():
             random_ip = random.choice(ip_list)
             print(f'BROWSER INSTANCE AT IP {random_ip}')
             auth_proxy = SeleniumAuthenticatedProxy(
-                f"http://brd-customer-hl_8c1f5ccc-zone-datacenter_proxy1-ip-{random_ip}:phvo8v5q1j4b@brd.superproxy.io:33335"
+                f"http://brd-customer-hl_1a49878a-zone-datacenter_proxy1-ip-{random_ip}:z1ai9t7pj6sq@brd.superproxy.io:33335"
             )
 
             auth_proxy.enrich_chrome_options(config)
@@ -621,5 +621,6 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
+
 
 
