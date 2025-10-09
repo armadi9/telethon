@@ -94,12 +94,16 @@ async def get_browser():
 # ----------------------------
 @app.before_serving
 async def startup():
+    global opened_tabs_count
+    global closed_tabs_count
     print("Starting browser on server startup...")
     try:
         os.system('clear')
         await get_browser()
         # start cleanup background task
         asyncio.create_task(cleanup_tabs())
+        opened_tabs_count = 0
+        closed_tabs_count = 0
         print("Browser initialized successfully")
     except Exception as e:
         print(f"Error initializing browser: {e}")
@@ -517,12 +521,19 @@ async def cleanup_tabs():
 # ----------------------------
 @app.route("/solve")
 async def solve():
+    global opened_tabs_count
+    global closed_tabs_count
     
     url = request.args.get("url")
     proxy = request.args.get("proxy")
     if not url:
         return jsonify({"error": "Missing url parameter"}), 400
 
+
+    if opened_tabs_count >= 100 and closed_tabs_count >= 100:
+        return Response('', content_type="text/plain; charset=utf-8", 500)
+
+    
     turnstile = Turnstile(url)
 
     browser_instance = await get_browser()
@@ -558,24 +569,16 @@ async def solve():
             pass
         # pastikan progress task dihapus
         try:
-            turnstile.stop_progress()
-
-            global opened_tabs_count
-            global closed_tabs_count
-            
+            turnstile.stop_progress()            
             get_semaphore = get_semaphore_status()
             waiting = get_semaphore.get("waiting")
             in_use = get_semaphore.get("in_use")
             
 
-            if opened_tabs_count >= 100 and closed_tabs_count >= 100:
+            if opened_tabs_count >= 100 and closed_tabs_count >= 100 :
                 print("[INFO] Restarting browser after 100 opened/closed tabs...")
                 try:
                     await shutdown()
-                    global browser
-                    browser = None
-                    opened_tabs_count = 0
-                    closed_tabs_count = 0
                     await startup()
                 except Exception as e:
                     print(f"[WARN] Error stopping browser: {e}")
@@ -621,6 +624,7 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
