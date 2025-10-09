@@ -572,7 +572,7 @@ async def solve():
             turnstile.stop_progress()            
             get_semaphore = get_semaphore_status()
             waiting = get_semaphore.get("waiting")
-            in_use = get_semaphore.get("in_use")
+            open_tabs = get_semaphore.get("open_tabs")
             
 
             if opened_tabs_count >= 100 and closed_tabs_count >= 100 and waiting == 0 and open_tabs == 1:
@@ -624,6 +624,7 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
