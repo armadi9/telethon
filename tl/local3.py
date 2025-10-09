@@ -531,7 +531,7 @@ async def solve():
 
 
     if opened_tabs_count >= 100 and closed_tabs_count >= 100:
-        return Response('', content_type="text/plain; charset=utf-8", 500)
+        return Response('', content_type="text/plain; charset=utf-8", status=500)
 
     
     turnstile = Turnstile(url)
@@ -624,6 +624,7 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
