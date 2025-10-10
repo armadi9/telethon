@@ -528,8 +528,7 @@ async def solve():
     proxy = request.args.get("proxy")
     if not url:
         return jsonify({"error": "Missing url parameter"}), 400
-
-
+    
     if opened_tabs_count >= 100 and closed_tabs_count >= 100:
         return Response("Internal Server Error", status=500)
 
@@ -545,12 +544,14 @@ async def solve():
             domain = urlparse(url).netloc
 
             if cf_clearance and len(cf_clearance) > 100:
-                print(f"\033[38;5;{random.randint(1, 256)}m{cf_clearance[:60]}: \033[0m{domain}")
+                print(f"\033[38;5;{random.randint(1, 256)}m{cf_clearance[:60]}: \033[0m{domain}")               
                 return Response(cf_clearance, content_type="text/plain; charset=utf-8")
             else:
                 turnstile.mark_failed()
                 return Response('', content_type="text/plain; charset=utf-8")
 
+   
+   
     except asyncio.TimeoutError:
         print("[DEBUG] Client timeout")
         turnstile.mark_failed()
@@ -569,13 +570,10 @@ async def solve():
             pass
         # pastikan progress task dihapus
         try:
-            turnstile.stop_progress()            
+            turnstile.stop_progress()                      
             get_semaphore = get_semaphore_status()
             waiting = get_semaphore.get("waiting")
-            open_tabs = get_semaphore.get("open_tabs")
-            
-
-            if opened_tabs_count >= 100 and closed_tabs_count >= 100 and (waiting == 0 or waiting is None) and open_tabs == 1:
+            if opened_tabs_count >= 100 and closed_tabs_count >= 100 and (waiting == 0 or waiting is None) and len(list(getattr(browser, "tabs", []))) == 1:
                 print("[INFO] Restarting browser after 100 opened/closed tabs...")
                 try:
                     await shutdown()
