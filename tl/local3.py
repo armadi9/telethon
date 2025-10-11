@@ -48,7 +48,7 @@ browser = None
 browser_lock = asyncio.Lock()
 
 # small bookkeeping
-limit_done = 35
+limit_done = 75
 opened_tabs_count = 0
 closed_tabs_count = 0
 
@@ -631,4 +631,5 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
+
 
