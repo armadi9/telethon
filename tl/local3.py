@@ -48,6 +48,7 @@ browser = None
 browser_lock = asyncio.Lock()
 
 # small bookkeeping
+limit_done = 35
 opened_tabs_count = 0
 closed_tabs_count = 0
 
@@ -523,6 +524,7 @@ async def cleanup_tabs():
 async def solve():
     global opened_tabs_count
     global closed_tabs_count
+    global limit_done
     
     url = request.args.get("url")
     proxy = request.args.get("proxy")
@@ -532,7 +534,7 @@ async def solve():
 
     stats = get_semaphore_status()
     waiting = stats.get("waiting")
-    if (opened_tabs_count >= 100 and closed_tabs_count >= 100) or (waiting is not None and waiting > 1):
+    if (opened_tabs_count >= limit_done and closed_tabs_count >= limit_done) or (waiting is not None and waiting > 1):
         return Response("Internal Server Error", status=500)
 
     
@@ -576,7 +578,7 @@ async def solve():
             turnstile.stop_progress()                      
             get_semaphore = get_semaphore_status()
             waiting = get_semaphore.get("waiting")
-            if opened_tabs_count >= 100 and closed_tabs_count >= 100 and (waiting == 0 or waiting is None) and len(list(getattr(browser, "tabs", []))) == 1:
+            if opened_tabs_count >= limit_done and closed_tabs_count >= limit_done and (waiting == 0 or waiting is None) and len(list(getattr(browser, "tabs", []))) == 1:
                 print("[INFO] Restarting browser after 100 opened/closed tabs...")
                 try:
                     await shutdown()
@@ -625,16 +627,4 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
-
-
-
-
-
-
-
-
-
-
-
-
 
