@@ -534,7 +534,11 @@ async def solve():
 
     stats = get_semaphore_status()
     waiting = stats.get("waiting")
-    if (opened_tabs_count >= limit_done and closed_tabs_count >= limit_done) or (waiting is not None and waiting > 1):
+
+    if waiting is not None and waiting > 1:
+        return Response("Internal Server Error", status=500)
+    
+    if opened_tabs_count >= limit_done and closed_tabs_count >= limit_done:
         return Response("Internal Server Error", status=500)
 
     
