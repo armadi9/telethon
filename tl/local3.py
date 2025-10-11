@@ -528,8 +528,11 @@ async def solve():
     proxy = request.args.get("proxy")
     if not url:
         return jsonify({"error": "Missing url parameter"}), 400
-    
-    if opened_tabs_count >= 100 and closed_tabs_count >= 100:
+
+
+    stats = get_semaphore_status()
+    waiting = stats.get("waiting")
+    if opened_tabs_count >= 100 and closed_tabs_count >= 100 or waiting >=1:
         return Response("Internal Server Error", status=500)
 
     
@@ -622,6 +625,7 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
