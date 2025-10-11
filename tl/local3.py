@@ -532,7 +532,7 @@ async def solve():
 
     stats = get_semaphore_status()
     waiting = stats.get("waiting")
-    if opened_tabs_count >= 100 and closed_tabs_count >= 100 or waiting > 1:
+    if (opened_tabs_count >= 100 and closed_tabs_count >= 100) or (waiting is not None and waiting > 1):
         return Response("Internal Server Error", status=500)
 
     
@@ -625,7 +625,6 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
-
 
 
 
