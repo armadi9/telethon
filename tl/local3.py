@@ -55,7 +55,7 @@ closed_tabs_count = 0
 # ----------------------------
 # Limit jumlah window (maksimal 4 sekaligus)
 # ----------------------------
-window_limit = asyncio.Semaphore(3)
+window_limit = asyncio.Semaphore(2)
 
 async def get_browser():
     global browser
@@ -631,5 +631,6 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
+
 
 
