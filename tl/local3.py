@@ -299,6 +299,7 @@ class TurnstileSolver:
 # ----------------------------
 async def setup_full_fetch_interception(tab, target_domain, proxy=None, turnstile: Turnstile = None):
     async def fetch_request_handler(event: fetch.RequestPaused):
+        global tab_error
         req = event.request
         url = req.url
         host = (urlparse(url).hostname or "").lower()
@@ -358,6 +359,9 @@ async def setup_full_fetch_interception(tab, target_domain, proxy=None, turnstil
                 try:
                     if resp.headers.get("set-cookie"):
                         turnstile.cf_cookie = (resp.cookies.get("cf_clearance") or client.cookies.get("cf_clearance"))
+                        if 'bitcotasks.com' in url:
+                            tab_error = 0
+                
                 except Exception:
                     pass
 
