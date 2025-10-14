@@ -2,4 +2,5 @@ zendriver
 colorama
 selenium_authenticated_proxy
 httpx
+rich
 curl_cffi
