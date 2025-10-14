@@ -359,6 +359,7 @@ async def setup_full_fetch_interception(tab, target_domain, proxy=None, turnstil
                 try:
                     if resp.headers.get("set-cookie"):
                         turnstile.cf_cookie = (resp.cookies.get("cf_clearance") or client.cookies.get("cf_clearance"))
+                        resp.headers.pop('set-cookie', None)
                         if 'bitcotasks.com' in url:
                             tab_error = 0
                 
@@ -687,3 +688,4 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
+
