@@ -64,9 +64,6 @@ async def get_browser():
             config = zendriver.Config(
                 headless=True,
             )
-            config.add_argument("--disable-background-timer-throttling")
-            config.add_argument("--disable-backgrounding-occluded-windows")
-            config.add_argument("--disable-renderer-backgrounding")
             config.add_argument(
                 "--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
             )
@@ -182,7 +179,9 @@ class TurnstileSolver:
         global opened_tabs_count
         await window_limit.acquire()  # tunggu slot kosong kalau sudah 4
         try:
-            self.tab = await self.browser.get(new_window=True)
+            self.tab = await self.browser.get(new_tab=True)
+            await self.tab.send(zendriver.cdp.page.bring_to_front())
+            
             # mark last_used immediately
             try:
                 setattr(self.tab, "created_at", time.time()) 
@@ -338,7 +337,7 @@ async def setup_full_fetch_interception(tab, target_domain, proxy=None, turnstil
             ))
             return
 
-        url_ignore = [".ico", '.png', '.jpg', '.css', 'detected', '/jsd/']
+        url_ignore = [".ico", '.png', '.jpg', '.css', 'detected', '/jsd/', 'google', 'googleapis.com']
         if any(sub in url for sub in url_ignore):
             await tab.send(fetch.fail_request(
                 request_id=event.request_id,
@@ -688,4 +687,3 @@ async def status():
 # ----------------------------
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8090)
-
