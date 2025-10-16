@@ -100,7 +100,7 @@ async def get_browser():
                 f"http://brd-customer-hl_470693ae-zone-datacenter_proxy1-ip-{random_ip}:ia29zfyswak3@brd.superproxy.io:33335"
             )
 
-            auth_proxy.enrich_chrome_options(config)
+            # auth_proxy.enrich_chrome_options(config)
             browser = zendriver.Browser(config)
             try:
                 await browser.start()
@@ -849,4 +849,5 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
