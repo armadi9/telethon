@@ -48,7 +48,7 @@ browser = None
 browser_lock = asyncio.Lock()
 
 # small bookkeeping
-limit_done = 200
+limit_done = 2000
 opened_tabs_count = 0
 closed_tabs_count = 0
 tab_error = 0
@@ -641,7 +641,7 @@ async def solve():
     waiting = stats.get("waiting")
 
     # throttle logic (kept from original)
-    if tab_error > 3:
+    if tab_error > 9:
         return Response("Internal Server Error", status=429)
 
     if waiting is not None and waiting > 1:
@@ -782,7 +782,7 @@ async def solve():
                 except Exception as e:
                     print(f"[WARN] Error stopping/starting browser: {e}")
 
-            elif open_tabs_len == 1 and (waiting == 0 or waiting is None) and tab_error > 3:
+            elif open_tabs_len == 1 and (waiting == 0 or waiting is None) and tab_error > 9:
                 print("[INFO] Restarting browser after heavy usage...")
                 try:
                     await shutdown()
@@ -849,6 +849,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
