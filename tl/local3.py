@@ -690,7 +690,7 @@ async def solve():
                     # ensure solve task cancelled
                     if not solve_task.done():
                         solve_task.cancel()
-                    if opened_tabs_count >= limit_done and closed_tabs_count >= limit_done and (waiting == 0 or waiting is None) and open_tabs_len == 1:
+                    if (waiting == 0 or waiting is None) and open_tabs_len == 1:
                         print("[INFO] Restarting browser after heavy usage...")
                         try:
                             await shutdown()
@@ -857,6 +857,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
