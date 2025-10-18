@@ -646,6 +646,7 @@ async def solve():
     if tab_error > 4:
         if open_tabs_len == 1:
             await shutdown()
+            await startup()
         return Response("Internal Server Error", status=429)
 
     if waiting is not None and waiting > 1:
@@ -861,6 +862,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
