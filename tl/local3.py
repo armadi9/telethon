@@ -631,7 +631,9 @@ async def solve():
     global limit_done
     global tab_error
     global active_requests
+    open_tabs_len = len(list(getattr(browser, "tabs", [])))
 
+    
     url = request.args.get("url")
     proxy = request.args.get("proxy")
     if not url:
@@ -642,6 +644,8 @@ async def solve():
 
     # throttle logic (kept from original)
     if tab_error > 4:
+        if open_tabs_len == 1:
+            await shutdown()
         return Response("Internal Server Error", status=429)
 
     if waiting is not None and waiting > 1:
@@ -857,6 +861,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
