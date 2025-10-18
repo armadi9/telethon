@@ -574,7 +574,7 @@ async def cleanup_tabs():
                         await t.close()
                     except Exception:
                         pass
-                    print(f"{Fore.YELLOW}[CLEANUP] Closed expire tab {tab_id}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}[CLEANUP] Closed expire tab {tab_id} error tab={tab_error}{Style.RESET_ALL}")
                     tab_error += 1
                     closed_tabs_count += 1
 
@@ -595,7 +595,7 @@ async def cleanup_tabs():
                         pass
                     tab_error += 1
                     closed_tabs_count += 1
-                    print(f"{Fore.YELLOW}[CLEANUP] Closed idle tab {tab_id}{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}[CLEANUP] Closed idle tab {tab_id} error tab={tab_error} {Style.RESET_ALL}")
 
                     fut = active_requests.pop(tab_id, None)
                     if fut and not fut.done():
@@ -641,7 +641,7 @@ async def solve():
     waiting = stats.get("waiting")
 
     # throttle logic (kept from original)
-    if tab_error > 9:
+    if tab_error > 4:
         return Response("Internal Server Error", status=429)
 
     if waiting is not None and waiting > 1:
@@ -849,6 +849,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
