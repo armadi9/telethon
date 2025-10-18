@@ -690,6 +690,14 @@ async def solve():
                     # ensure solve task cancelled
                     if not solve_task.done():
                         solve_task.cancel()
+                    if opened_tabs_count >= limit_done and closed_tabs_count >= limit_done and (waiting == 0 or waiting is None) and open_tabs_len == 1:
+                        print("[INFO] Restarting browser after heavy usage...")
+                        try:
+                            await shutdown()
+                            await startup()
+                        except Exception as e:
+                            print(f"[WARN] Error stopping/starting browser: {e}")
+                    
                     return Response("Internal Server Error", status=500)
 
                 # if the future result is a Response object (we set it that way in cleanup)
@@ -849,6 +857,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
