@@ -56,7 +56,7 @@ tab_error = 0
 # ----------------------------
 # Limit jumlah window (maksimal 4 sekaligus)
 # ----------------------------
-window_limit = asyncio.Semaphore(8)
+window_limit = asyncio.Semaphore(4)
 
 # ----------------------------
 # Active requests mapping
@@ -649,7 +649,7 @@ async def solve():
             await startup()
         return Response("Internal Server Error", status=429)
 
-    if open_tabs_len > 7:
+    if open_tabs_len > 3:
         return Response("Internal Server Error", status=429)
 
     if opened_tabs_count >= limit_done and closed_tabs_count >= limit_done:
@@ -862,6 +862,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
