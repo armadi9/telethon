@@ -649,7 +649,7 @@ async def solve():
             await startup()
         return Response("Internal Server Error", status=429)
 
-    if open_tabs_len > 3:
+    if open_tabs_len > 4:
         return Response("Internal Server Error", status=429)
 
     if opened_tabs_count >= limit_done and closed_tabs_count >= limit_done:
@@ -862,6 +862,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
