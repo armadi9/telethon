@@ -97,7 +97,7 @@ async def get_browser():
             random_ip = random.choice(ip_list)
             print(f'BROWSER INSTANCE AT IP {random_ip}')
             auth_proxy = SeleniumAuthenticatedProxy(
-                f"http://brd-customer-hl_2367846c-zone-datacenter_proxy1-ip-{random_ip}:zenck04w1k77@brd.superproxy.io:33335"
+                f"http://brd-customer-hl_51d61a6d-zone-datacenter_proxy1-ip-{random_ip}:jvj2rlpab9n9@brd.superproxy.io:33335"
             )
             
             auth_proxy.enrich_chrome_options(config)
@@ -863,6 +863,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
