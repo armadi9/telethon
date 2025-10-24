@@ -631,6 +631,7 @@ async def solve():
     global limit_done
     global tab_error
     global active_requests
+    global browser
     open_tabs_len = len(list(getattr(browser, "tabs", [])))
 
     
@@ -643,7 +644,7 @@ async def solve():
     waiting = stats.get("waiting")
 
     # throttle logic (kept from original)
-    if tab_error > 4:
+    if tab_error > 4 or browser is None:
         if open_tabs_len == 1:
             await shutdown()
             await startup()
@@ -862,6 +863,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
