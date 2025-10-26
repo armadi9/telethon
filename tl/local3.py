@@ -48,7 +48,7 @@ browser = None
 browser_lock = asyncio.Lock()
 
 # small bookkeeping
-limit_done = 2000
+limit_done = 50
 opened_tabs_count = 0
 closed_tabs_count = 0
 tab_error = 0
@@ -870,5 +870,6 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
