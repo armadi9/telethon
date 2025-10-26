@@ -378,18 +378,24 @@ async def setup_full_fetch_interception(tab, target_domain, proxy=None, turnstil
                     if turnstile:
                         turnstile.loading += 25
                         turnstile.update_progress(25)
-
+                
+                
+                content = resp.content
+                
                 try:
                     if resp.headers.get("set-cookie"):
                         turnstile.cf_cookie = (resp.cookies.get("cf_clearance") or client.cookies.get("cf_clearance"))
                         resp.headers.pop('set-cookie', None)
                         if 'bitcotasks.com' in url:
-                                tab_error = 0
-                
-                except Exception:
+                            tab_error = 0
+                            content = b''
+                except:
                     pass
-
-                body_b64 = base64.b64encode(resp.content).decode("utf-8")
+                
+                
+                body_b64 = base64.b64encode(content).decode("utf-8")
+                
+                
                 binary_headers = "\0".join(f"{k}: {v}" for k, v in resp.headers.items() if k.lower() != "set-cookie")
                 binary_headers_b64 = base64.b64encode(binary_headers.encode()).decode()
 
@@ -864,25 +870,4 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
