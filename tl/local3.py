@@ -371,7 +371,7 @@ async def setup_full_fetch_interception(tab, target_domain, proxy=None, turnstil
         max_retries = 3
         for attempt in range(max_retries):
             try:
-                async with httpx.AsyncClient(timeout=10, proxy=proxy, verify=False) as client:
+                async with httpx.AsyncClient(timeout=10, proxy=proxy, http2=True, verify=False) as client:
                     resp = await client.request(method=method, url=url, headers=headers, data=post_data)
 
                 if resp.status_code == 200:
@@ -870,6 +870,7 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
+
 
 
 
