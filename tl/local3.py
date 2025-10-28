@@ -589,7 +589,8 @@ async def cleanup_tabs():
                     except Exception:
                         pass
                     print(f"{Fore.YELLOW}[CLEANUP] Closed expire tab {tab_id} error tab={tab_error}{Style.RESET_ALL}")
-                    tab_error += 1
+                    if 'bitcotasks' in t.url:
+                        tab_error += 1
                     closed_tabs_count += 1
 
                     # If there is an active future for this tab -> set 500
@@ -607,8 +608,10 @@ async def cleanup_tabs():
                         await t.close()
                     except Exception:
                         pass
-                    tab_error += 1
+                    if 'bitcotasks' in t.url:
+                        tab_error += 1
                     closed_tabs_count += 1
+                    
                     print(f"{Fore.YELLOW}[CLEANUP] Closed idle tab {tab_id} error tab={tab_error} {Style.RESET_ALL}")
 
                     fut = active_requests.pop(tab_id, None)
@@ -881,7 +884,6 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
-
 
 
 
