@@ -52,7 +52,7 @@ limit_done = 50
 opened_tabs_count = 0
 closed_tabs_count = 0
 tab_error = 0
-
+browser_status = False
 # ----------------------------
 # Limit jumlah window (maksimal 4 sekaligus)
 # ----------------------------
@@ -72,6 +72,8 @@ active_requests: dict[int, asyncio.Future] = {}
 # ----------------------------
 async def get_browser():
     global browser
+    global browser_status
+    
     async with browser_lock:
         if browser is None:
             config = zendriver.Config(headless=True)
@@ -109,6 +111,8 @@ async def get_browser():
                 print(f"[ERROR] Failed to start zendriver browser: {e}")
                 browser = None
                 raise
+    
+    browser_status = True
     return browser
 
 # ----------------------------
@@ -136,6 +140,9 @@ async def startup():
 @app.after_serving
 async def shutdown():
     global browser
+    global browser_status
+    
+    browser_status = False
     if browser:
         print("Closing browser...")
         try:
@@ -639,6 +646,8 @@ async def solve():
     global tab_error
     global active_requests
     global browser
+    global browser_status
+
     open_tabs_len = len(list(getattr(browser, "tabs", [])))
 
     
@@ -651,6 +660,9 @@ async def solve():
     waiting = stats.get("waiting")
 
     # throttle logic (kept from original)
+    if browser_status is False:
+        return Response("Internal Server Error", status=501)
+    
     if tab_error > 9 or browser is None:
         if open_tabs_len == 1:
             await shutdown()
@@ -870,7 +882,6 @@ async def status():
 if __name__ == "__main__":
     # Use hypercorn/uvloop as you prefer in production; here use Quart builtin runner for simplicity
     app.run(host="0.0.0.0", port=8090)
-
 
 
 
