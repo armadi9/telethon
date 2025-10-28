@@ -588,8 +588,9 @@ async def cleanup_tabs():
                         await t.close()
                     except Exception:
                         pass
-                    print(f"{Fore.YELLOW}[CLEANUP] Closed expire tab {tab_id} error tab={tab_error}{Style.RESET_ALL}")
+                    
                     if 'bitcotasks' in t.url:
+                        print(f"{Fore.YELLOW}[CLEANUP] Closed expire tab {tab_id} error tab={tab_error}{Style.RESET_ALL}")
                         tab_error += 1
                     closed_tabs_count += 1
 
@@ -610,9 +611,11 @@ async def cleanup_tabs():
                         pass
                     if 'bitcotasks' in t.url:
                         tab_error += 1
+                        print(f"{Fore.YELLOW}[CLEANUP] Closed idle tab {tab_id} error tab={tab_error} {Style.RESET_ALL}")
+                    
                     closed_tabs_count += 1
                     
-                    print(f"{Fore.YELLOW}[CLEANUP] Closed idle tab {tab_id} error tab={tab_error} {Style.RESET_ALL}")
+                    
 
                     fut = active_requests.pop(tab_id, None)
                     if fut and not fut.done():
