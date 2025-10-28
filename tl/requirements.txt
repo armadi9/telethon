@@ -1,6 +1,7 @@
-zendriver
+zendriver==0.14.1
 colorama
 selenium_authenticated_proxy
 httpx
 rich
 curl_cffi
+
